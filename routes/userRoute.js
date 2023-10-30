@@ -30,6 +30,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const user_controller = require("../controllers/userController");
+
+const auth = require('../middlware/auth')
 user_route.post(
   "/register",
   upload.single("image"),
@@ -37,4 +39,8 @@ user_route.post(
 );
 
 user_route.post('/login', user_controller.login_user)
+
+user_route.get('/test', auth, function (req, res) {
+  res.status(200).send({ success: true, msg: "Authenticated" })
+})
 module.exports = user_route;

@@ -66,16 +66,18 @@ const login_user = async (req, res) => {
       const passwordMatch = await bycrptjs.compare(password, userData.password);
       if (passwordMatch) {
         const tokentData = await create_token(userData._id);
+
         const userResult = {
           _id: userData._id,
           name: userData.name,
           email: userData.email,
-          image: userData.image,
+          image: 'http://localhost:3000/userImages/' + userData.image,
           mobile: userData.mobile,
           type: userData.type,
+          token_type: 'Bearer',
           tokent: tokentData,
-
         }
+
         return res.status(200).send({ success: false, msg: 'Login Successfully', 'data': userResult });
       } else {
         return res.status(200).send({ success: false, msg: 'Login details are incorrect' });
@@ -84,7 +86,6 @@ const login_user = async (req, res) => {
       return res.status(200).send({ success: false, msg: 'Login details are incorrect' });
     }
 
-    return res.status(200).send({ success: true });
   } catch (error) {
     res.status(400).send(error.message);
   }
