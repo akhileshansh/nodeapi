@@ -10,7 +10,7 @@ const verifyToken = async (req, res, next) => {
     try {
         const decode = jwt.verify(token.split(" ")[1], config.secret_jwt);
         req.user = decode;
-
+        req._id = decode._id;
 
     } catch (error) {
         res.status(400).send({ success: false, msg: 'Invalid tokent' })

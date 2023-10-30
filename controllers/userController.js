@@ -24,6 +24,7 @@ const register_user = async (req, res) => {
       email: req.body.email,
       password: spassword,
       image: req.file.filename,
+      mobile: req.body.mobile,
       type: req.body.type,
     });
 
@@ -91,7 +92,36 @@ const login_user = async (req, res) => {
   }
 }
 
+
+//=============update password =================//
+
+
+const update_password = async (req, res) => {
+
+  try {
+    const userId = req._id;
+
+    const data = await User.findOne({ _id: userId });
+    if (data) {
+      const passwordHash = await securePassword(req.body.password)
+      const userData = await User.findByIdAndUpdate({ _id: userId }, {
+        $set: {
+          password: passwordHash
+        }
+      });
+      res.status(200).send({ success: true, msg: 'Your Pass has been Update Successfully' })
+    } else {
+
+      res.status(200).send({ success: false, msg: 'User Id not found!' })
+    }
+
+  } catch (error) {
+    res.status(200).send(error.message)
+  }
+}
+
 module.exports = {
   register_user,
   login_user,
+  update_password,
 };
