@@ -44,5 +44,18 @@ user_route.get('/test', auth, function (req, res) {
   res.status(200).send({ success: true, msg: "Authenticated" })
 })
 
-user_route.post('/update_password', auth, user_controller.update_password)
+user_route.post('/update_password', auth, user_controller.update_password);
+
+
+user_route.post('/logout', (req, res) => {
+  const token = req.body.token || req.query.token || req.headers['authorization'] || req.get('Authorization');
+
+  if (token) {
+    // Add the token to the blacklist
+    tokenBlacklist.add(token);
+  }
+
+  res.json({ message: 'Logout successful' });
+});
+user_route.set('tokenBlacklist', new Set());
 module.exports = user_route;
